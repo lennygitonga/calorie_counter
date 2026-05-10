@@ -1,20 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from datetime import date
 from .models import FoodItem
 import os
 import json
 from groq import Groq
-from django.http import JsonResponse
 
 
 def index(request):
     """Display all food items and the total calories for the day."""
     food_items = FoodItem.objects.filter(date_added=date.today())
     total_calories = sum(item.calories for item in food_items)
-    
+
+    meal_totals = {}
+    for value, label in FoodItem.MEAL_CHOICES:
+        meal_items = food_items.filter(meal_type=value)
+        meal_totals[value] = sum(item.calories for item in meal_items)
+
     context = {
         'food_items': food_items,
         'total_calories': total_calories,
+        'meal_choices': FoodItem.MEAL_CHOICES,
+        'meal_totals': meal_totals,
     }
     return render(request, 'calorie_tracker/index.html', context)
 
@@ -24,7 +31,14 @@ def add_food(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         calories = request.POST.get('calories')
-        FoodItem.objects.create(name=name, calories=calories)
+        serving_size = request.POST.get('serving_size')
+        meal_type = request.POST.get('meal_type')
+        FoodItem.objects.create(
+            name=name,
+            calories=calories,
+            serving_size=serving_size,
+            meal_type=meal_type
+        )
         return redirect('index')
     return redirect('index')
 
@@ -40,6 +54,7 @@ def reset_calories(request):
     """Delete all food items added today."""
     FoodItem.objects.filter(date_added=date.today()).delete()
     return redirect('index')
+
 
 def lookup_calories(request):
     """Use Groq AI to estimate calories for a given food item."""
