@@ -5,15 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calorie Counter</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        orange: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <nav class="bg-green-600 text-white px-6 py-4">
-        <h1 class="text-2xl font-bold">Calorie Counter</h1>
+<body class="bg-orange-50 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-orange-600 text-white shadow-lg">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-orange-600 font-black text-xl w-10 h-10 rounded-full flex items-center justify-center">
+                    C
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold leading-tight">Calorie Counter</h1>
+                    <p class="text-orange-200 text-xs">Track what you eat, own your health</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-orange-200 text-xs">Today</p>
+                <p class="font-semibold text-sm" id="current-date"></p>
+            </div>
+        </div>
     </nav>
 
-    <main class="max-w-2xl mx-auto mt-8 px-4">
+    <main class="max-w-4xl mx-auto mt-8 px-4 pb-12">
         {% block content %}
         {% endblock %}
     </main>
+
+    <script>
+        // Display today's date in the navbar
+        const dateEl = document.getElementById('current-date');
+        const today = new Date();
+        dateEl.textContent = today.toLocaleDateString('en-US', {
+            weekday: 'long', month: 'long', day: 'numeric'
+        });
+    </script>
+
 </body>
 </html>
