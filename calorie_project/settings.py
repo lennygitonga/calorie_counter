@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-#7vt+=2zne9m@wfqfmx#)yzkb$+@*a&ljhi9lkl12(a^i3%fzm
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['https://calorie-counter-qyw2.onrender.com']
 
 # Application definition
 
