@@ -1,0 +1,60 @@
+{% extends 'calorie_tracker/base.html' %}
+
+{% block content %}
+
+    <!-- Add food form -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Add Food Item</h2>
+        <form method="POST" action="{% url 'add_food' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Food Name</label>
+                <input type="text" name="name" required
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Calories</label>
+                <input type="number" name="calories" required
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500">
+            </div>
+            <button type="submit"
+                class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                Add Food
+            </button>
+        </form>
+    </div>
+
+    <!-- Total calories -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold">Total Calories Today</h2>
+        <p class="text-4xl font-bold text-green-600 mt-2">{{ total_calories }}</p>
+    </div>
+
+    <!-- Food list -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Today's Food Items</h2>
+        {% if food_items %}
+            <ul>
+                {% for item in food_items %}
+                <li class="flex justify-between items-center border-b py-3">
+                    <span>{{ item.name }}</span>
+                    <span class="text-gray-500">{{ item.calories }} cal</span>
+                    <a href="{% url 'delete_food' item.id %}"
+                        class="text-red-500 hover:text-red-700">Remove</a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">No food items added yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Reset button -->
+    <div class="mb-8">
+        <a href="{% url 'reset_calories' %}"
+            class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">
+            Reset Today's Calories
+        </a>
+    </div>
+
+{% endblock %}
