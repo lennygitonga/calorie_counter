@@ -12,16 +12,17 @@ def index(request):
     food_items = FoodItem.objects.filter(date_added=date.today())
     total_calories = sum(item.calories for item in food_items)
 
-    meal_totals = {}
+    meal_breakdown = []
     for value, label in FoodItem.MEAL_CHOICES:
         meal_items = food_items.filter(meal_type=value)
-        meal_totals[value] = sum(item.calories for item in meal_items)
+        meal_total = sum(item.calories for item in meal_items)
+        meal_breakdown.append({'label': label, 'total': meal_total})
 
     context = {
         'food_items': food_items,
         'total_calories': total_calories,
         'meal_choices': FoodItem.MEAL_CHOICES,
-        'meal_totals': meal_totals,
+        'meal_breakdown': meal_breakdown,
     }
     return render(request, 'calorie_tracker/index.html', context)
 
@@ -32,7 +33,11 @@ def add_food(request):
         name = request.POST.get('name')
         calories = request.POST.get('calories')
         serving_size = request.POST.get('serving_size')
-        meal_type = request.POST.get('meal_type')
+        meal_type = request.POST.get('meal_type', 'snack')
+        
+        if not meal_type:
+            meal_type = 'snack'
+            
         FoodItem.objects.create(
             name=name,
             calories=calories,
@@ -76,7 +81,7 @@ def lookup_calories(request):
                     "content": f"Food: {food_name}, Serving size: {serving_size}"
                 }
             ],
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
         )
 
         response_text = chat_completion.choices[0].message.content

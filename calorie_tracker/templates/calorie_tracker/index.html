@@ -59,10 +59,11 @@
                 class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg hover:bg-orange-700 transition">
                 Add Food Item
             </button>
+
         </form>
     </div>
 
-    <!-- Right column: Stats and food list -->
+    <!-- Right column: Stats -->
     <div class="flex flex-col gap-6">
 
         <!-- Total calories card -->
@@ -77,12 +78,10 @@
             <h2 class="text-lg font-bold text-orange-700 mb-1">Meal Breakdown</h2>
             <p class="text-gray-400 text-xs mb-4">Calories per meal type</p>
             <div class="grid grid-cols-2 gap-3">
-                {% for value, label in meal_choices %}
+                {% for meal in meal_breakdown %}
                 <div class="bg-orange-50 rounded-lg px-4 py-3">
-                    <p class="text-xs text-gray-400">{{ label }}</p>
-                    <p class="text-xl font-bold text-orange-600">
-                        {{ meal_totals|default_if_none:"0" }}
-                    </p>
+                    <p class="text-xs text-gray-400">{{ meal.label }}</p>
+                    <p class="text-xl font-bold text-orange-600">{{ meal.total }} kcal</p>
                 </div>
                 {% endfor %}
             </div>
