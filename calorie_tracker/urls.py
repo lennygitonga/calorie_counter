@@ -7,4 +7,5 @@ urlpatterns = [
     path('add/', views.add_food, name='add_food'),
     path('delete/<int:food_id>/', views.delete_food, name='delete_food'),
     path('reset/', views.reset_calories, name='reset_calories'),
+    path('lookup-calories/', views.lookup_calories, name='lookup_calories'),
 ]
